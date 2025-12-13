@@ -58,3 +58,23 @@ or in another scernario it know that some orders from "Engulf_12122025-1000-S" 
 And that is why i chose the Modular Approach because all this cannot be done possibly/cleanly in a single file.....
 
 that is all, i think you have all you need to know. i shared every little detail with you... hope you know what to make of it and how would you use it in a modular way.  so tell me
+
+
+MQL5/
+├── Experts/
+│   └── GoldEngulfing_Main.mq5          ← Main EA file
+│
+└── Include/
+    ├── Config.mqh                       ← Settings & structures
+    ├── Utils.mqh                        ← Helper functions
+    ├── EngulfingDetector.mqh           ← Pattern detection
+    ├── VisualManager.mqh               ← Yellow/Red lines
+    ├── OrderManager.mqh                ← 10-order placement
+    ├── SetupManager.mqh                ← State machine
+    ├── StorageSystem.mqh               ← JSON persistence
+    └── TableLogger.mqh                 ← Professional logging
+
+Files/ (auto-created)
+├── GoldEngulfing_setups.json           ← Current state
+├── GoldEngulfing_backups.json          ← Backup history
+└── GoldEngulfing_logs.json             ← Event log
