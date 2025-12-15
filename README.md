@@ -57,4 +57,4 @@ or in another scernario it know that some orders from "Engulf_12122025-1000-S" 
 
 And that is why i chose the Modular Approach because all this cannot be done possibly/cleanly in a single file.....
 
-that is all, i think you have all you need to know. i shared every little detail with you... hope you know what to make of it and how would you use it in a modular way.  so tell me
+that is all, i think you have all you need to know. i shared every little detail with you... hope you know what to make of it and how would you use it in a modular way.
