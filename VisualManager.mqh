@@ -142,20 +142,17 @@ void RestoreVisualLines() {
    Print("Restoring visual lines for ", g_setupCount, " active setups...");
    
    for(int i = 0; i < g_setupCount; i++) {
-      EngulfingSetup* setup = GetSetupByIndex(i);
-      if(setup == NULL) continue;
-      
       // Check if lines already exist
-      if(ObjectFind(0, setup.lineHighName) >= 0) {
-         DebugPrint("Lines already exist for: " + setup.setupID);
+      if(ObjectFind(0, g_setups[i].lineHighName) >= 0) {
+         DebugPrint("Lines already exist for: " + g_setups[i].setupID);
          continue;
       }
       
       // Redraw based on state
-      if(setup.state == SETUP_UNTAPPED) {
+      if(g_setups[i].state == SETUP_UNTAPPED) {
          // Yellow lines extending to current time
          DrawRangeLines(g_setups[i]);
-      } else if(setup.state == SETUP_TAPPED) {
+      } else if(g_setups[i].state == SETUP_TAPPED) {
          // Red lines stopped at tappedTime
          RedrawTappedLines(g_setups[i]);
       }

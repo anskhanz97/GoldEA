@@ -222,25 +222,22 @@ void AddSetup(EngulfingSetup &setup) {
 }
 
 //+------------------------------------------------------------------+
-//| Get Setup by ID                                                  |
+//| Get Setup Index by ID                                            |
 //+------------------------------------------------------------------+
-EngulfingSetup* GetSetupByID(string setupID) {
+int GetSetupIndexByID(string setupID) {
    for(int i = 0; i < g_setupCount; i++) {
       if(g_setups[i].setupID == setupID) {
-         return GetPointer(g_setups[i]);
+         return i;
       }
    }
-   return NULL;
+   return -1; // Not found
 }
 
 //+------------------------------------------------------------------+
-//| Get Setup by Index                                               |
+//| Check if Setup Index is Valid                                    |
 //+------------------------------------------------------------------+
-EngulfingSetup* GetSetupByIndex(int index) {
-   if(index < 0 || index >= g_setupCount) {
-      return NULL;
-   }
-   return GetPointer(g_setups[index]);
+bool IsValidSetupIndex(int index) {
+   return (index >= 0 && index < g_setupCount);
 }
 
 //+------------------------------------------------------------------+

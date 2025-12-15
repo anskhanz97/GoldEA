@@ -66,6 +66,24 @@ int OnInit() {
       }
    }
    
+   //--- Detect new engulfing pattern
+   string setupID = DetectNewEngulfing();
+   
+   if(setupID != "") {
+      //--- New engulfing pattern found!
+      ProcessNewSetup(setupID);
+      
+      //--- Save state immediately
+      SaveSetupsToFile();
+      
+      //--- Display updated summary
+      DisplayCompactSummary();
+      DisplayActiveSetups();
+   }
+   
+   //--- Optional: Display full candle table (can be heavy, use sparingly)
+   // Uncomment if you want full 336-candle analysis on each bar
+      DisplayCandleTable();
    //--- Initialize last bar time
    g_lastBarTime = iTime(_Symbol, PERIOD_H1, 0);
    
@@ -193,12 +211,9 @@ void OnNewBar() {
       DisplayActiveSetups();
    }
    
-   //--- Cleanup old visual lines (once per bar)
-   //CleanupOldLines();
-   
    //--- Optional: Display full candle table (can be heavy, use sparingly)
    // Uncomment if you want full 336-candle analysis on each bar
-    DisplayCandleTable();
+      DisplayCandleTable();
 }
 
 //+------------------------------------------------------------------+

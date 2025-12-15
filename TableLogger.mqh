@@ -209,8 +209,8 @@ void DisplayActiveSetups() {
 //| Display Single Setup Details                                     |
 //+------------------------------------------------------------------+
 void DisplaySetupDetails(string setupID) {
-   EngulfingSetup* setup = GetSetupByID(setupID);
-   if(setup == NULL) {
+   int index = GetSetupIndexByID(setupID);
+   if(!IsValidSetupIndex(index)) {
       Print("Setup not found: ", setupID);
       return;
    }
@@ -218,32 +218,32 @@ void DisplaySetupDetails(string setupID) {
    Print("========================================================================");
    Print("                        SETUP DETAILS");
    Print("========================================================================");
-   Print("Setup ID:          ", setup.setupID);
-   Print("Magic Number:      ", setup.magicNumber);
-   Print("Direction:         ", setup.isBullish ? "BULLISH" : "BEARISH");
-   Print("State:             ", GetStateName(setup.state));
+   Print("Setup ID:          ", g_setups[index].setupID);
+   Print("Magic Number:      ", g_setups[index].magicNumber);
+   Print("Direction:         ", g_setups[index].isBullish ? "BULLISH" : "BEARISH");
+   Print("State:             ", GetStateName(g_setups[index].state));
    Print("------------------------------------------------------------------------");
-   Print("Engulfing Time:    ", TimeToString(setup.engulfingTime, TIME_DATE|TIME_MINUTES));
-   Print("Engulfed Time:     ", TimeToString(setup.engulfedTime, TIME_DATE|TIME_MINUTES));
-   Print("Created Time:      ", TimeToString(setup.createdTime, TIME_DATE|TIME_MINUTES));
-   if(setup.tappedTime > 0) {
-      Print("Tapped Time:       ", TimeToString(setup.tappedTime, TIME_DATE|TIME_MINUTES));
+   Print("Engulfing Time:    ", TimeToString(g_setups[index].engulfingTime, TIME_DATE|TIME_MINUTES));
+   Print("Engulfed Time:     ", TimeToString(g_setups[index].engulfedTime, TIME_DATE|TIME_MINUTES));
+   Print("Created Time:      ", TimeToString(g_setups[index].createdTime, TIME_DATE|TIME_MINUTES));
+   if(g_setups[index].tappedTime > 0) {
+      Print("Tapped Time:       ", TimeToString(g_setups[index].tappedTime, TIME_DATE|TIME_MINUTES));
    }
    Print("------------------------------------------------------------------------");
-   Print("Range High:        ", DoubleToString(setup.rangeHigh, _Digits));
-   Print("Range Low:         ", DoubleToString(setup.rangeLow, _Digits));
-   Print("Range Size:        ", DoubleToString(PointsToPips(setup.rangeHigh - setup.rangeLow), 2), " pips");
+   Print("Range High:        ", DoubleToString(g_setups[index].rangeHigh, _Digits));
+   Print("Range Low:         ", DoubleToString(g_setups[index].rangeLow, _Digits));
+   Print("Range Size:        ", DoubleToString(PointsToPips(g_setups[index].rangeHigh - g_setups[index].rangeLow), 2), " pips");
    Print("------------------------------------------------------------------------");
-   Print("Orders Placed:     ", setup.ordersPlaced);
-   Print("Orders Executed:   ", setup.ordersExecuted);
-   Print("Orders Closed:     ", setup.ordersClosed);
-   Print("First TP Hit:      ", setup.firstTPHit ? "YES" : "NO");
-   Print("Setup Complete:    ", setup.setupComplete ? "YES" : "NO");
+   Print("Orders Placed:     ", g_setups[index].ordersPlaced);
+   Print("Orders Executed:   ", g_setups[index].ordersExecuted);
+   Print("Orders Closed:     ", g_setups[index].ordersClosed);
+   Print("First TP Hit:      ", g_setups[index].firstTPHit ? "YES" : "NO");
+   Print("Setup Complete:    ", g_setups[index].setupComplete ? "YES" : "NO");
    Print("------------------------------------------------------------------------");
-   Print("Total Profit:      $", DoubleToString(setup.totalProfit, 2));
-   Print("TP Hits:           ", setup.tpCount);
-   Print("SL Hits:           ", setup.slCount);
-   Print("Manual Closes:     ", setup.manualCloseCount);
+   Print("Total Profit:      $", DoubleToString(g_setups[index].totalProfit, 2));
+   Print("TP Hits:           ", g_setups[index].tpCount);
+   Print("SL Hits:           ", g_setups[index].slCount);
+   Print("Manual Closes:     ", g_setups[index].manualCloseCount);
    Print("========================================================================");
 }
 

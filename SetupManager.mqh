@@ -25,20 +25,17 @@ void CheckUntappedSetups() {
 //| Mark Setup as TAPPED                                             |
 //+------------------------------------------------------------------+
 void MarkSetupAsTapped(int index) {
-   if(index < 0 || index >= g_setupCount) return;
-   
-   EngulfingSetup* setup = GetSetupByIndex(index);
-   if(setup == NULL) return;
+   if(!IsValidSetupIndex(index)) return;
    
    // Update state
-   setup.state = SETUP_TAPPED;
-   setup.tappedTime = TimeCurrent();
+   g_setups[index].state = SETUP_TAPPED;
+   g_setups[index].tappedTime = TimeCurrent();
    
    // Redraw lines as RED
    RedrawTappedLines(g_setups[index]);
    
-   Print("🎯 Setup TAPPED: ", setup.setupID, " at ", TimeToString(setup.tappedTime, TIME_DATE|TIME_MINUTES));
-   SendAlert("🎯 Setup Tapped: " + setup.setupID);
+   Print("🎯 Setup TAPPED: ", g_setups[index].setupID, " at ", TimeToString(g_setups[index].tappedTime, TIME_DATE|TIME_MINUTES));
+   SendAlert("🎯 Setup Tapped: " + g_setups[index].setupID);
 }
 
 //+------------------------------------------------------------------+
@@ -78,22 +75,19 @@ void CheckTappedSetups() {
 //| Mark Setup as COMPLETE                                           |
 //+------------------------------------------------------------------+
 void MarkSetupAsComplete(int index) {
-   if(index < 0 || index >= g_setupCount) return;
-   
-   EngulfingSetup* setup = GetSetupByIndex(index);
-   if(setup == NULL) return;
+   if(!IsValidSetupIndex(index)) return;
    
    // Update state
-   setup.state = SETUP_COMPLETE;
-   setup.setupComplete = true;
+   g_setups[index].state = SETUP_COMPLETE;
+   g_setups[index].setupComplete = true;
    
    g_totalSetupsCompleted++;
    
-   Print("🏁 Setup COMPLETE: ", setup.setupID);
+   Print("🏁 Setup COMPLETE: ", g_setups[index].setupID);
    Print(StringFormat("   Total Profit: $%.2f | TP Hits: %d | SL Hits: %d | Orders Closed: %d",
-                     setup.totalProfit, setup.tpCount, setup.slCount, setup.ordersClosed));
+                     g_setups[index].totalProfit, g_setups[index].tpCount, g_setups[index].slCount, g_setups[index].ordersClosed));
    
-   SendAlert(StringFormat("🏁 Setup Complete: %s | Profit: $%.2f", setup.setupID, setup.totalProfit));
+   SendAlert(StringFormat("🏁 Setup Complete: %s | Profit: $%.2f", g_setups[index].setupID, g_setups[index].totalProfit));
    
    // Delete visual lines (setup is done)
    DeleteSetupLines(g_setups[index]);
@@ -119,24 +113,21 @@ void CheckExpiredSetups() {
 //| Mark Setup as EXPIRED                                            |
 //+------------------------------------------------------------------+
 void MarkSetupAsExpired(int index) {
-   if(index < 0 || index >= g_setupCount) return;
-   
-   EngulfingSetup* setup = GetSetupByIndex(index);
-   if(setup == NULL) return;
+   if(!IsValidSetupIndex(index)) return;
    
    // Cancel any pending orders (should be none, but safety check)
-   int cancelled = CancelPendingOrders(setup.setupID);
+   int cancelled = CancelPendingOrders(g_setups[index].setupID);
    if(cancelled > 0) {
-      Print("⚠️ Cancelled ", cancelled, " pending orders for expired setup: ", setup.setupID);
+      Print("⚠️ Cancelled ", cancelled, " pending orders for expired setup: ", g_setups[index].setupID);
    }
    
    // Update state
-   setup.state = SETUP_EXPIRED;
-   setup.setupComplete = true;
+   g_setups[index].state = SETUP_EXPIRED;
+   g_setups[index].setupComplete = true;
    
    g_totalSetupsExpired++;
    
-   Print("⏰ Setup EXPIRED: ", setup.setupID, " (never tapped after ", InpLookbackDays, " days)");
+   Print("⏰ Setup EXPIRED: ", g_setups[index].setupID, " (never tapped after ", InpLookbackDays, " days)");
    
    // Delete visual lines
    DeleteSetupLines(g_setups[index]);
@@ -205,18 +196,18 @@ void ProcessNewSetup(string setupID) {
    // Add to array
    AddSetup(setup);
    
-   // Get pointer to setup in array (for modification)
-   EngulfingSetup* setupPtr = GetSetupByID(setupID);
-   if(setupPtr == NULL) {
-      Print("ERROR: Failed to get setup pointer after adding: ", setupID);
+   // Get index of newly added setup
+   int setupIndex = g_setupCount - 1;
+   if(!IsValidSetupIndex(setupIndex)) {
+      Print("ERROR: Failed to get setup index after adding: ", setupID);
       return;
    }
    
    // Draw visual lines (yellow)
-   DrawRangeLines(g_setups[g_setupCount - 1]);
+   DrawRangeLines(g_setups[setupIndex]);
    
    // Place orders
-   PlaceOrders(g_setups[g_setupCount - 1]);
+   PlaceOrders(g_setups[setupIndex]);
    
    Print("✅ New setup processed successfully: ", setupID);
 }
